@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Film History Quiz</title>
+  <style>
+    body { font-family: Arial; padding: 30px; max-width: 600px; margin: auto; background: #f9f9f9; }
+    h2 { color: #333; }
+    .question { font-size: 20px; margin-bottom: 15px; }
+    .option { 
+      display: block; margin: 10px 0; padding: 10px; border: 1px solid #ccc; 
+      border-radius: 5px; cursor: pointer; background: #fff;
+    }
+    .correct { background: #c8f7c5; }
+    .incorrect { background: #f7c5c5; }
+    #score { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<h2>Film History Quiz</h2>
+<div id="quiz-container">
+  <div class="question" id="question"></div>
+  <div id="options"></div>
+  <div id="score"></div>
+</div>
+
+<script>
+const quiz = [
+  {
+    question: "Who was the first to popularize photography and took the first photo of people?",
+    options: ["Louis Daguerre", "Thomas Edison", "The Lumière Brothers", "Eadweard Muybridge"],
+    answer: "Louis Daguerre"
+  },
+  {
+    question: "What was the name of the first moving picture made by Eadweard Muybridge?",
+    options: ["A Trip to the Moon", "The Wizard of Oz", "The Horse in Motion", "Bicycle Thieves"],
+    answer: "The Horse in Motion"
+  },
+  {
+    question: "What was the name of the first movie studio in history?",
+    options: ["The Black Maria", "The Magic Lantern", "The Studio System", "The Cinematograph"],
+    answer: "The Black Maria"
+  }
+];
+
+let current = 0;
+let score = 0;
+
+const questionEl = document.getElementById('question');
+const optionsEl = document.getElementById('options');
+const scoreEl = document.getElementById('score');
+
+function loadQuestion() {
+  const q = quiz[current];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach(option => {
+    const btn = document.createElement("div");
+    btn.textContent = option;
+    btn.className = "option";
+    btn.onclick = () => checkAnswer(btn, option, q.answer);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function checkAnswer(btn, selected, correct) {
+  const allOptions = document.querySelectorAll('.option');
+  allOptions.forEach(b => b.onclick = null);
+  if (selected === correct) {
+    btn.classList.add("correct");
+    score++;
+  } else {
+    btn.classList.add("incorrect");
+    allOptions.forEach(b => {
+      if (b.textContent === correct) b.classList.add("correct");
+    });
+  }
+  setTimeout(() => {
+    current++;
+    if (current < quiz.length) {
+      loadQuestion();
+    } else {
+      showScore();
+    }
+  }, 1000);
+}
+
+function showScore() {
+  questionEl.textContent = "Quiz Complete!";
+  optionsEl.innerHTML = "";
+  scoreEl.textContent = `You scored ${score} out of ${quiz.length}.`;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
